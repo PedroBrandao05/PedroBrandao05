@@ -1,5 +1,7 @@
-- 👋 Hi, I’m @PedroBrandao05
-- 👀 I’m interested in front-end development
-- 🌱 I’m currently learning React with Typescript
-- 💞️ I’m looking to collaborate with anyone who needs my help
-- 📫 How to reach me: email pedro-brandao2012@hotmail.com or DM me on instagram @pedrobrandao.0512
+### Hi i'm Pedro Brandão
+
+- I'm currently working on my System Development course fynal paper
+- I'm currently learning Typescript and React
+- How to reach me: pedro-brandao2012@hotmail.com
+- In my free time I like to play video games and play guitar
+
