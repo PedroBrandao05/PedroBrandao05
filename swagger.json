@@ -1,0 +1,484 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "APIs CNPJ (Básica, QSA e Empresa)",
+    "description": "API para consulta de informações de empresas brasileiras através do CNPJ. Oferece três tipos de consulta: Básica, QSA (Quadro de Sócios e Administradores) e Empresa (informações detalhadas da empresa).",
+    "version": "1.0.0",
+    "contact": {
+      "name": "API Support",
+      "url": "https://github.com/PedroBrandao05/PedroBrandao05",
+      "email": "pedro-brandao2012@hotmail.com"
+    },
+    "license": {
+      "name": "MIT",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.cnpj.gov.br/v1",
+      "description": "Servidor de produção"
+    },
+    {
+      "url": "https://api-dev.cnpj.gov.br/v1",
+      "description": "Servidor de desenvolvimento"
+    }
+  ],
+  "paths": {
+    "/cnpj/basica/{cnpj}": {
+      "get": {
+        "tags": ["Consulta Básica"],
+        "summary": "Consulta informações básicas de uma empresa",
+        "description": "Retorna informações básicas de uma empresa baseada no CNPJ fornecido",
+        "parameters": [
+          {
+            "name": "cnpj",
+            "in": "path",
+            "required": true,
+            "description": "CNPJ da empresa (apenas números)",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{14}$",
+              "example": "11222333000181"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informações básicas da empresa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultaBasica"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "CNPJ inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "CNPJ não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cnpj/qsa/{cnpj}": {
+      "get": {
+        "tags": ["Consulta QSA"],
+        "summary": "Consulta Quadro de Sócios e Administradores",
+        "description": "Retorna informações sobre o Quadro de Sócios e Administradores (QSA) de uma empresa",
+        "parameters": [
+          {
+            "name": "cnpj",
+            "in": "path",
+            "required": true,
+            "description": "CNPJ da empresa (apenas números)",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{14}$",
+              "example": "11222333000181"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Quadro de Sócios e Administradores",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultaQSA"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "CNPJ inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "CNPJ não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/cnpj/empresa/{cnpj}": {
+      "get": {
+        "tags": ["Consulta Empresa"],
+        "summary": "Consulta informações detalhadas da empresa",
+        "description": "Retorna informações completas e detalhadas de uma empresa incluindo dados cadastrais, endereço, atividades e situação",
+        "parameters": [
+          {
+            "name": "cnpj",
+            "in": "path",
+            "required": true,
+            "description": "CNPJ da empresa (apenas números)",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9]{14}$",
+              "example": "11222333000181"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Informações detalhadas da empresa",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConsultaEmpresa"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "CNPJ inválido",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "CNPJ não encontrado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Erro interno do servidor",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ConsultaBasica": {
+        "type": "object",
+        "properties": {
+          "cnpj": {
+            "type": "string",
+            "description": "CNPJ da empresa",
+            "example": "11.222.333/0001-81"
+          },
+          "razao_social": {
+            "type": "string",
+            "description": "Razão social da empresa",
+            "example": "EMPRESA EXEMPLO LTDA"
+          },
+          "nome_fantasia": {
+            "type": "string",
+            "description": "Nome fantasia da empresa",
+            "example": "Exemplo Corp"
+          },
+          "situacao": {
+            "type": "string",
+            "description": "Situação cadastral da empresa",
+            "enum": ["ATIVA", "BAIXADA", "SUSPENSA", "INAPTA"],
+            "example": "ATIVA"
+          },
+          "data_abertura": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de abertura da empresa",
+            "example": "2020-01-15"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo de empresa",
+            "example": "MATRIZ"
+          },
+          "porte": {
+            "type": "string",
+            "description": "Porte da empresa",
+            "enum": ["MICRO EMPRESA", "PEQUENO PORTE", "DEMAIS"],
+            "example": "PEQUENO PORTE"
+          }
+        },
+        "required": ["cnpj", "razao_social", "situacao", "data_abertura"]
+      },
+      "ConsultaQSA": {
+        "type": "object",
+        "properties": {
+          "cnpj": {
+            "type": "string",
+            "description": "CNPJ da empresa",
+            "example": "11.222.333/0001-81"
+          },
+          "razao_social": {
+            "type": "string",
+            "description": "Razão social da empresa",
+            "example": "EMPRESA EXEMPLO LTDA"
+          },
+          "qsa": {
+            "type": "array",
+            "description": "Lista de sócios e administradores",
+            "items": {
+              "$ref": "#/components/schemas/Socio"
+            }
+          }
+        },
+        "required": ["cnpj", "razao_social", "qsa"]
+      },
+      "ConsultaEmpresa": {
+        "type": "object",
+        "properties": {
+          "cnpj": {
+            "type": "string",
+            "description": "CNPJ da empresa",
+            "example": "11.222.333/0001-81"
+          },
+          "razao_social": {
+            "type": "string",
+            "description": "Razão social da empresa",
+            "example": "EMPRESA EXEMPLO LTDA"
+          },
+          "nome_fantasia": {
+            "type": "string",
+            "description": "Nome fantasia da empresa",
+            "example": "Exemplo Corp"
+          },
+          "situacao": {
+            "type": "string",
+            "description": "Situação cadastral da empresa",
+            "enum": ["ATIVA", "BAIXADA", "SUSPENSA", "INAPTA"],
+            "example": "ATIVA"
+          },
+          "data_abertura": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de abertura da empresa",
+            "example": "2020-01-15"
+          },
+          "tipo": {
+            "type": "string",
+            "description": "Tipo de empresa",
+            "example": "MATRIZ"
+          },
+          "porte": {
+            "type": "string",
+            "description": "Porte da empresa",
+            "enum": ["MICRO EMPRESA", "PEQUENO PORTE", "DEMAIS"],
+            "example": "PEQUENO PORTE"
+          },
+          "natureza_juridica": {
+            "type": "string",
+            "description": "Natureza jurídica da empresa",
+            "example": "Sociedade Empresária Limitada"
+          },
+          "capital_social": {
+            "type": "number",
+            "description": "Capital social da empresa",
+            "example": 100000.00
+          },
+          "endereco": {
+            "$ref": "#/components/schemas/Endereco"
+          },
+          "atividade_principal": {
+            "$ref": "#/components/schemas/Atividade"
+          },
+          "atividades_secundarias": {
+            "type": "array",
+            "description": "Lista de atividades secundárias",
+            "items": {
+              "$ref": "#/components/schemas/Atividade"
+            }
+          },
+          "telefone": {
+            "type": "string",
+            "description": "Telefone da empresa",
+            "example": "(11) 1234-5678"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email da empresa",
+            "example": "contato@exemplo.com.br"
+          }
+        },
+        "required": ["cnpj", "razao_social", "situacao", "data_abertura", "endereco", "atividade_principal"]
+      },
+      "Socio": {
+        "type": "object",
+        "properties": {
+          "nome": {
+            "type": "string",
+            "description": "Nome do sócio",
+            "example": "João Silva"
+          },
+          "cpf_cnpj": {
+            "type": "string",
+            "description": "CPF ou CNPJ do sócio",
+            "example": "123.456.789-00"
+          },
+          "qualificacao": {
+            "type": "string",
+            "description": "Qualificação do sócio",
+            "example": "Sócio-Administrador"
+          },
+          "data_entrada": {
+            "type": "string",
+            "format": "date",
+            "description": "Data de entrada no quadro societário",
+            "example": "2020-01-15"
+          },
+          "pais": {
+            "type": "string",
+            "description": "País de origem",
+            "example": "Brasil"
+          },
+          "representante_legal": {
+            "type": "string",
+            "description": "Representante legal (se aplicável)",
+            "example": "Maria Silva"
+          },
+          "faixa_etaria": {
+            "type": "string",
+            "description": "Faixa etária do sócio",
+            "example": "Entre 31 a 40 anos"
+          }
+        },
+        "required": ["nome", "qualificacao"]
+      },
+      "Endereco": {
+        "type": "object",
+        "properties": {
+          "logradouro": {
+            "type": "string",
+            "description": "Logradouro",
+            "example": "Rua das Flores"
+          },
+          "numero": {
+            "type": "string",
+            "description": "Número",
+            "example": "123"
+          },
+          "complemento": {
+            "type": "string",
+            "description": "Complemento",
+            "example": "Sala 101"
+          },
+          "bairro": {
+            "type": "string",
+            "description": "Bairro",
+            "example": "Centro"
+          },
+          "municipio": {
+            "type": "string",
+            "description": "Município",
+            "example": "São Paulo"
+          },
+          "uf": {
+            "type": "string",
+            "description": "Unidade Federativa",
+            "example": "SP"
+          },
+          "cep": {
+            "type": "string",
+            "description": "CEP",
+            "example": "01234-567"
+          }
+        },
+        "required": ["logradouro", "bairro", "municipio", "uf", "cep"]
+      },
+      "Atividade": {
+        "type": "object",
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "description": "Código CNAE da atividade",
+            "example": "62.01-5-00"
+          },
+          "descricao": {
+            "type": "string",
+            "description": "Descrição da atividade",
+            "example": "Desenvolvimento de programas de computador sob encomenda"
+          }
+        },
+        "required": ["codigo", "descricao"]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "description": "Descrição do erro",
+            "example": "CNPJ inválido"
+          },
+          "code": {
+            "type": "integer",
+            "description": "Código do erro",
+            "example": 400
+          },
+          "message": {
+            "type": "string",
+            "description": "Mensagem detalhada do erro",
+            "example": "O CNPJ fornecido não possui o formato válido"
+          }
+        },
+        "required": ["error", "code", "message"]
+      }
+    }
+  }
+}
